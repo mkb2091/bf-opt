@@ -50,4 +50,18 @@ mod tests {
             }
         )
     }
+    #[test]
+    fn double_loop() {
+        assert_eq!(
+            bf_opt::BfProgram::from("+[[]]"),
+            bf_opt::BfProgram {
+                data: vec![
+                    bf_opt::Ast::Increment(1),
+                    bf_opt::Ast::WhileLoop(bf_opt::BfProgram {
+                        data: vec![bf_opt::Ast::WhileLoop(bf_opt::BfProgram { data: vec![] })]
+                    })
+                ]
+            }
+        )
+    }
 }

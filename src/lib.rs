@@ -37,8 +37,13 @@ impl From<&str> for BfProgram {
                             .push(Ast::WhileLoop(BfProgram::from(loop_data_string.as_ref())));
                         loop_data = Vec::new();
                         in_loop = false;
+                    } else {
+                        loop_data.push(x);
                     }
                 } else {
+                    if x == '[' {
+                        unclosed += 1;
+                    }
                     loop_data.push(x);
                 }
             } else {
