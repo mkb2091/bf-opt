@@ -23,11 +23,38 @@ impl BfProgram {
 impl From<&str> for BfProgram {
     fn from(data: &str) -> BfProgram {
         let mut program = BfProgram::new();
+        let mut loop_data: Vec<char> = Vec::new();
+        let mut in_loop: bool = false;
+        let mut unclosed = 0;
         for x in data.chars() {
-            match x {
-                '+' => program.data.push(Ast::Increment(1)),
-                '-' => program.data.push(Ast::Decrement(1)),
-                _ => {}
+            if in_loop {
+                if x == ']' {
+                    unclosed -= 1;
+                    if unclosed == 0 {
+                        let loop_data_string: String = loop_data.into_iter().collect();
+                        program
+                            .data
+                            .push(Ast::WhileLoop(BfProgram::from(loop_data_string.as_ref())));
+                        loop_data = Vec::new();
+                        in_loop = false;
+                    }
+                } else {
+                    loop_data.push(x);
+                }
+            } else {
+                match x {
+                    '+' => program.data.push(Ast::Increment(1)),
+                    '-' => program.data.push(Ast::Decrement(1)),
+                    '>' => program.data.push(Ast::MoveRight(1)),
+                    '<' => program.data.push(Ast::MoveLeft(1)),
+                    '.' => program.data.push(Ast::Output(None)),
+                    ',' => program.data.push(Ast::Input(None)),
+                    '[' => {
+                        in_loop = true;
+                        unclosed = 1;
+                    }
+                    _ => {}
+                }
             }
         }
         program
