@@ -18,7 +18,13 @@ impl RealOps {
             RealOps::MoveLeft => "<".to_string(),
             RealOps::Input => ",".to_string(),
             RealOps::Output => ".".to_string(),
-            RealOps::WhileLoop(x) => format!("[{:?}]", x.to_string()),
+            RealOps::WhileLoop(x) => format!("[{:}]", x.to_string()),
+        }
+    }
+    fn get_output_length(&self) -> usize {
+        match self {
+            RealOps::WhileLoop(x) => x.get_output_length() + 2,
+            _ => 1,
         }
     }
 }
@@ -38,6 +44,13 @@ impl BfProgram {
             result.push_str(&op.to_string());
         }
         result
+    }
+    pub fn get_output_length(&self) -> usize {
+        let mut length = 0;
+        for op in self.ast.iter() {
+            length += op.get_output_length();
+        }
+        length
     }
 }
 

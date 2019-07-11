@@ -1,4 +1,19 @@
 #[cfg(test)]
+#[macro_use]
+extern crate quickcheck;
+
+#[cfg(test)]
+mod quickcheck_tests {
+    quickcheck! {
+        fn get_output_length_correct(data: String) -> bool {
+        let program = bf_opt::BfProgram::from(data.as_ref());
+        program.get_output_length(),program.to_string().len());
+        program.get_output_length() == program.to_string().len()
+        }
+    }
+}
+
+#[cfg(test)]
 mod tests {
     #[test]
     fn increment_to_ast() {
