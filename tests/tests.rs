@@ -5,7 +5,7 @@ mod tests {
         assert_eq!(
             bf_opt::BfProgram::from("+"),
             bf_opt::BfProgram {
-                data: vec![bf_opt::Ast::Increment(1)]
+                ast: vec![bf_opt::RealOps::Increment]
             }
         )
     }
@@ -14,7 +14,7 @@ mod tests {
         assert_eq!(
             bf_opt::BfProgram::from("-"),
             bf_opt::BfProgram {
-                data: vec![bf_opt::Ast::Decrement(1)]
+                ast: vec![bf_opt::RealOps::Decrement]
             }
         )
     }
@@ -23,7 +23,7 @@ mod tests {
         assert_eq!(
             bf_opt::BfProgram::from(">"),
             bf_opt::BfProgram {
-                data: vec![bf_opt::Ast::MoveRight(1)]
+                ast: vec![bf_opt::RealOps::MoveRight]
             }
         )
     }
@@ -32,7 +32,7 @@ mod tests {
         assert_eq!(
             bf_opt::BfProgram::from("<"),
             bf_opt::BfProgram {
-                data: vec![bf_opt::Ast::MoveLeft(1)]
+                ast: vec![bf_opt::RealOps::MoveLeft]
             }
         )
     }
@@ -41,10 +41,10 @@ mod tests {
         assert_eq!(
             bf_opt::BfProgram::from(",[.,]"),
             bf_opt::BfProgram {
-                data: vec![
-                    bf_opt::Ast::Input(None),
-                    bf_opt::Ast::WhileLoop(bf_opt::BfProgram {
-                        data: vec![bf_opt::Ast::Output(None), bf_opt::Ast::Input(None)]
+                ast: vec![
+                    bf_opt::RealOps::Input,
+                    bf_opt::RealOps::WhileLoop(bf_opt::BfProgram {
+                        ast: vec![bf_opt::RealOps::Output, bf_opt::RealOps::Input]
                     })
                 ]
             }
@@ -55,13 +55,19 @@ mod tests {
         assert_eq!(
             bf_opt::BfProgram::from("+[[]]"),
             bf_opt::BfProgram {
-                data: vec![
-                    bf_opt::Ast::Increment(1),
-                    bf_opt::Ast::WhileLoop(bf_opt::BfProgram {
-                        data: vec![bf_opt::Ast::WhileLoop(bf_opt::BfProgram { data: vec![] })]
+                ast: vec![
+                    bf_opt::RealOps::Increment,
+                    bf_opt::RealOps::WhileLoop(bf_opt::BfProgram {
+                        ast: vec![bf_opt::RealOps::WhileLoop(bf_opt::BfProgram {
+                            ast: vec![]
+                        })]
                     })
                 ]
             }
         )
+    }
+    #[test]
+    fn double_conversion() {
+        assert_eq!(bf_opt::BfProgram::from("+").to_string(), "+")
     }
 }

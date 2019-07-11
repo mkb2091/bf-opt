@@ -1,22 +1,43 @@
 #[derive(PartialEq, Debug)]
-pub enum Ast {
-    MoveRight(usize),
-    MoveLeft(usize),
-    Increment(u8),
-    Decrement(u8),
-    Output(Option<u8>),
-    Input(Option<isize>),
+pub enum RealOps {
+    MoveRight,
+    MoveLeft,
+    Increment,
+    Decrement,
+    Input,
+    Output,
     WhileLoop(BfProgram),
+}
+
+impl RealOps {
+    fn to_string(&self) -> String {
+        match self {
+            RealOps::Increment => "+".to_string(),
+            RealOps::Decrement => "-".to_string(),
+            RealOps::MoveRight => ">".to_string(),
+            RealOps::MoveLeft => "<".to_string(),
+            RealOps::Input => ",".to_string(),
+            RealOps::Output => ".".to_string(),
+            RealOps::WhileLoop(x) => format!("[{:?}]", x.to_string()),
+        }
+    }
 }
 
 #[derive(PartialEq, Debug)]
 pub struct BfProgram {
-    pub data: Vec<Ast>,
+    pub ast: Vec<RealOps>,
 }
 
 impl BfProgram {
     pub fn new() -> BfProgram {
-        BfProgram { data: Vec::new() }
+        BfProgram { ast: Vec::new() }
+    }
+    pub fn to_string(&self) -> String {
+        let mut result: String = String::new();
+        for op in self.ast.iter() {
+            result.push_str(&op.to_string());
+        }
+        result
     }
 }
 
@@ -32,9 +53,9 @@ impl From<&str> for BfProgram {
                     unclosed -= 1;
                     if unclosed == 0 {
                         let loop_data_string: String = loop_data.into_iter().collect();
-                        program
-                            .data
-                            .push(Ast::WhileLoop(BfProgram::from(loop_data_string.as_ref())));
+                        program.ast.push(RealOps::WhileLoop(BfProgram::from(
+                            loop_data_string.as_ref(),
+                        )));
                         loop_data = Vec::new();
                         in_loop = false;
                     } else {
@@ -48,12 +69,12 @@ impl From<&str> for BfProgram {
                 }
             } else {
                 match x {
-                    '+' => program.data.push(Ast::Increment(1)),
-                    '-' => program.data.push(Ast::Decrement(1)),
-                    '>' => program.data.push(Ast::MoveRight(1)),
-                    '<' => program.data.push(Ast::MoveLeft(1)),
-                    '.' => program.data.push(Ast::Output(None)),
-                    ',' => program.data.push(Ast::Input(None)),
+                    '+' => program.ast.push(RealOps::Increment),
+                    '-' => program.ast.push(RealOps::Decrement),
+                    '>' => program.ast.push(RealOps::MoveRight),
+                    '<' => program.ast.push(RealOps::MoveLeft),
+                    '.' => program.ast.push(RealOps::Output),
+                    ',' => program.ast.push(RealOps::Input),
                     '[' => {
                         in_loop = true;
                         unclosed = 1;
