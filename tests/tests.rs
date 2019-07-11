@@ -10,6 +10,12 @@ mod quickcheck_tests {
         program.get_output_length() == program.to_string().len()
         }
     }
+    quickcheck! {
+        fn check_length_not_increased(data: String) -> bool {
+        let program = bf_opt::BfProgram::from(data.as_ref());
+        program.get_output_length() <= data.len()
+        }
+    }
 }
 
 #[cfg(test)]
