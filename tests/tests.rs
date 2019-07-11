@@ -116,6 +116,29 @@ mod double_conversion {
     }
     #[test]
     fn invalid_characters() {
-        assert_eq!(bf_opt::BfProgram::from("1234567890!@#$%^&*()=_abcdefghijkmnlopqrstuvwxyz").to_string(), "")
+        assert_eq!(
+            bf_opt::BfProgram::from("1234567890!@#$%^&*()=_abcdefghijkmnlopqrstuvwxyz").to_string(),
+            ""
+        )
+    }
+    #[test]
+    fn wikipedia_hello_world() {
+        assert_eq!(
+        bf_opt::BfProgram::from("++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.").to_string(), 
+        "++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.");
+    }
+}
+
+#[cfg(test)]
+mod interpreter_test {
+    #[test]
+    fn wikipedia_hello_world() {
+        let program = bf_opt::BfProgram::from("++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.");
+        let mut instance = bf_opt::interpreter::Instance::new();
+        println!("Ran: {:}", instance.run(&program, &[0], 100000));
+        assert_eq!(
+            instance.output,
+            vec![72, 101, 108, 108, 111, 32, 87, 111, 114, 108, 100, 33, 10]
+        );
     }
 }

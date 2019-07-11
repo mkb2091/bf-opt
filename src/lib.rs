@@ -1,3 +1,5 @@
+pub mod interpreter;
+
 #[derive(PartialEq, Debug)]
 pub enum RealOps {
     MoveRight,
@@ -51,6 +53,9 @@ impl BfProgram {
             length += op.get_output_length();
         }
         length
+    }
+    pub fn optimise(&mut self) {
+        opt::remove_redundant(self);
     }
 }
 
