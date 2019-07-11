@@ -13,9 +13,9 @@ mod quickcheck_tests {
 }
 
 #[cfg(test)]
-mod tests {
+mod to_ast {
     #[test]
-    fn increment_to_ast() {
+    fn increment() {
         assert_eq!(
             bf_opt::BfProgram::from("+"),
             bf_opt::BfProgram {
@@ -24,7 +24,7 @@ mod tests {
         )
     }
     #[test]
-    fn decrement_to_ast() {
+    fn decrement() {
         assert_eq!(
             bf_opt::BfProgram::from("-"),
             bf_opt::BfProgram {
@@ -33,7 +33,7 @@ mod tests {
         )
     }
     #[test]
-    fn move_right_to_ast() {
+    fn move_right() {
         assert_eq!(
             bf_opt::BfProgram::from(">"),
             bf_opt::BfProgram {
@@ -42,7 +42,7 @@ mod tests {
         )
     }
     #[test]
-    fn move_left_to_ast() {
+    fn move_left() {
         assert_eq!(
             bf_opt::BfProgram::from("<"),
             bf_opt::BfProgram {
@@ -80,8 +80,32 @@ mod tests {
             }
         )
     }
+}
+
+#[cfg(test)]
+mod double_conversion {
     #[test]
-    fn double_conversion() {
+    fn increment() {
         assert_eq!(bf_opt::BfProgram::from("+").to_string(), "+")
+    }
+    #[test]
+    fn decrement() {
+        assert_eq!(bf_opt::BfProgram::from("-").to_string(), "-")
+    }
+    #[test]
+    fn move_right() {
+        assert_eq!(bf_opt::BfProgram::from(">").to_string(), ">")
+    }
+    #[test]
+    fn move_left() {
+        assert_eq!(bf_opt::BfProgram::from("<").to_string(), "<")
+    }
+    #[test]
+    fn basic_cat() {
+        assert_eq!(bf_opt::BfProgram::from(",[.,]").to_string(), ",[.,]")
+    }
+    #[test]
+    fn double_loop() {
+        assert_eq!(bf_opt::BfProgram::from("+[[]]").to_string(), "+[[]]")
     }
 }
