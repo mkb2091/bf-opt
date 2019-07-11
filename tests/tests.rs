@@ -6,14 +6,29 @@ extern crate quickcheck;
 mod quickcheck_tests {
     quickcheck! {
         fn get_output_length_correct(data: String) -> bool {
-        let program = bf_opt::BfProgram::from(data.as_ref());
-        program.get_output_length() == program.to_string().len()
+               let program = bf_opt::BfProgram::from(data.as_ref());
+               program.get_output_length() == program.to_string().len()
         }
     }
     quickcheck! {
         fn check_length_not_increased(data: String) -> bool {
-        let program = bf_opt::BfProgram::from(data.as_ref());
-        program.get_output_length() <= data.len()
+               let program = bf_opt::BfProgram::from(data.as_ref());
+               program.get_output_length() <= data.len()
+        }
+    }
+    quickcheck! {
+        fn basic_cat(input: Vec<u8>) -> bool {
+            let program = bf_opt::BfProgram::from(",[.,]");
+            let mut instance = bf_opt::interpreter::Instance::new();
+            instance.run(&program, &input, 1 + 4 * input.len());
+            let mut equal = true;
+            for i in 0..(if input.len() > instance.output.len() { input.len() } else { instance.output.len() }) {
+                if input[i] == 0 {
+                    return equal;
+                }
+                equal &= input[i] == instance.output[i];
+            }
+            equal
         }
     }
 }

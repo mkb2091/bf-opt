@@ -54,9 +54,7 @@ impl BfProgram {
         }
         length
     }
-    pub fn optimise(&mut self) {
-        opt::remove_redundant(self);
-    }
+    pub fn optimise(&mut self) {}
 }
 
 impl From<&str> for BfProgram {

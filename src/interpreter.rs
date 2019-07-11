@@ -1,6 +1,7 @@
 use crate::{BfProgram, RealOps};
 use std::convert::TryInto;
 
+#[derive(PartialEq)]
 pub struct EndlessVec<T: std::marker::Copy> {
     positive_data: Vec<T>,
     negative_data: Vec<T>,
@@ -55,6 +56,7 @@ impl<T: std::marker::Copy> EndlessVec<T> {
     }
 }
 
+#[derive(PartialEq)]
 pub struct Instance {
     data: EndlessVec<u8>,
     pub output: Vec<u8>,
@@ -89,7 +91,7 @@ impl Instance {
                         self.output.push(self.data.get(self.pos));
                     }
                     RealOps::Input => {
-                        let new_data = if input.len() >= self.input_pos {
+                        let new_data = if input.len() > self.input_pos {
                             input[self.input_pos]
                         } else {
                             0
