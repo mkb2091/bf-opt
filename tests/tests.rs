@@ -108,4 +108,8 @@ mod double_conversion {
     fn double_loop() {
         assert_eq!(bf_opt::BfProgram::from("+[[]]").to_string(), "+[[]]")
     }
+    #[test]
+    fn invalid_characters() {
+        assert_eq!(bf_opt::BfProgram::from("1234567890!@#$%^&*()=_abcdefghijkmnlopqrstuvwxyz").to_string(), "")
+    }
 }
